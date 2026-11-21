@@ -223,3 +223,10 @@ h1 em,h2 em{font-style:normal;color:var(--accent)}
 .nav-admin span{margin-left:9px;color:var(--white)}
 .nav-admin:hover{background:#1b2111;border-color:var(--accent)}
 @media(max-width:640px){.main-nav .nav-admin{padding:13px 0;border:0;border-bottom:1px solid #252525;border-radius:0}}
+
+
+/* Admin access link at the bottom of the homepage */
+.footer-admin-link{color:var(--accent);font-size:9px;letter-spacing:.08em;border:1px solid #46502e;padding:8px 12px;border-radius:3px;white-space:nowrap;transition:background .2s,border-color .2s}
+.footer-admin-link span{margin-left:8px;color:var(--white)}
+.footer-admin-link:hover{background:#1b2111;border-color:var(--accent)}
+@media(max-width:640px){.footer-admin-link{margin-top:4px}}
