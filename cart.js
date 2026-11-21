@@ -3,6 +3,13 @@
   const cards = [...document.querySelectorAll(".product-card")];
   if (!cards.length) return;
 
+  // Temporary catalogue rates. Products not listed here require store confirmation.
+  const pricesPerKg = { B0: 90, B1: 90, B2: 85, B3: 85 };
+  const priceFor = (name) => pricesPerKg[name.trim().toUpperCase()] ?? null;
+  const formatMoney = (value) => "Rs. " + value.toLocaleString("en-IN", {
+    maximumFractionDigits: 2
+  });
+
   const cart = [];
   const moneySafe = (value) => String(value).replace(/[<>&"]/g, "");
   const panel = document.createElement("section");
@@ -10,7 +17,14 @@
   panel.innerHTML = `
     <div class="cart-heading"><div><div class="eyebrow"><span></span> YOUR SELECTION</div><h2>Your <em>cart.</em></h2></div><span class="cart-count" id="cartCount">0 items</span></div>
     <div id="cartItems" class="cart-items"><p class="cart-empty">Your cart is empty. Add feed from the catalogue above.</p></div>
-    <div class="cart-bottom"><strong id="cartSummary">0 items selected</strong><button class="button button-light" id="checkoutButton" type="button" disabled>Continue to WhatsApp <span>↗</span></button></div>
+    <div class="cart-bottom">
+      <div class="cart-totals">
+        <strong id="cartSummary">0 products selected</strong>
+        <strong id="cartTotal">Estimated total: Rs. 0</strong>
+        <small id="cartPriceNote">Add products to see your total.</small>
+      </div>
+      <button class="button button-light" id="checkoutButton" type="button" disabled>Continue to WhatsApp <span>↗</span></button>
+    </div>
   `;
   document.querySelector(".product-catalogue").append(panel);
 
@@ -25,10 +39,13 @@
         <select name="fulfilment" required><option value="Store pickup">Store pickup</option><option value="Home delivery">Home delivery</option></select>
       </label>
       <label id="addressField" hidden>Delivery address<textarea name="address" rows="2" maxlength="300" placeholder="Enter your delivery address"></textarea></label>
-      <p class="checkout-hint">Your order will be sent to Shreeyanvi Suppliers on WhatsApp. The store will confirm availability and pricing with you.</p>
+      <p class="checkout-hint">Prices shown for B0–B3 are temporary estimates. Other feed prices and final availability will be confirmed by the store.</p>
       <button class="button button-light checkout-submit" type="submit">Send order on WhatsApp <span>↗</span></button>
     </form>`;
   document.body.append(checkout);
+
+  const itemKilograms = (item) => item.kind === "Sack" ? item.quantity * 50 : item.quantity;
+  const itemTotal = (item) => item.pricePerKg === null ? null : itemKilograms(item) * item.pricePerKg;
 
   function renderCart() {
     const list = document.querySelector("#cartItems");
@@ -43,8 +60,17 @@
         const title = document.createElement("strong");
         title.textContent = item.name;
         const subtitle = document.createElement("span");
-        subtitle.textContent = item.kind === "Sack" ? "50 kg sack(s)" : "Loose feed · kg";
-        details.append(title, subtitle);
+        subtitle.textContent = item.kind === "Sack"
+          ? item.quantity + " × 50 kg sack(s)"
+          : String(item.quantity) + " kg loose";
+        const lineTotal = document.createElement("span");
+        lineTotal.className = "cart-line-total";
+        const total = itemTotal(item);
+        lineTotal.textContent = total === null
+          ? "Price to be confirmed"
+          : formatMoney(total) + " · " + formatMoney(item.pricePerKg) + "/kg";
+        details.append(title, subtitle, lineTotal);
+
         const controls = document.createElement("div");
         controls.className = "cart-controls";
         const amount = document.createElement("input");
@@ -65,16 +91,35 @@
           renderCart();
         });
         const remove = document.createElement("button");
-        remove.type = "button"; remove.className = "cart-remove"; remove.textContent = "Remove";
+        remove.type = "button";
+        remove.className = "cart-remove";
+        remove.textContent = "Remove";
         remove.addEventListener("click", () => { cart.splice(index, 1); renderCart(); });
         controls.append(amount, remove);
         row.append(details, controls);
         list.append(row);
       });
     }
+
     const count = cart.reduce((sum, item) => sum + (item.kind === "Sack" ? item.quantity : 1), 0);
+    const knownSubtotal = cart.reduce((sum, item) => sum + (itemTotal(item) ?? 0), 0);
+    const unpricedCount = cart.filter(item => item.pricePerKg === null).length;
     document.querySelector("#cartCount").textContent = count + (count === 1 ? " item" : " items");
-    document.querySelector("#cartSummary").textContent = cart.length + " product type" + (cart.length === 1 ? "" : "s") + " selected";
+    document.querySelector("#cartSummary").textContent =
+      cart.length + " product type" + (cart.length === 1 ? "" : "s") + " selected";
+
+    const totalLabel = document.querySelector("#cartTotal");
+    const priceNote = document.querySelector("#cartPriceNote");
+    if (!cart.length) {
+      totalLabel.textContent = "Estimated total: Rs. 0";
+      priceNote.textContent = "Add products to see your total.";
+    } else if (unpricedCount > 0) {
+      totalLabel.textContent = "Known-price subtotal: " + formatMoney(knownSubtotal);
+      priceNote.textContent = unpricedCount + " product type(s) still need price confirmation. Final total may be higher.";
+    } else {
+      totalLabel.textContent = "Estimated total: " + formatMoney(knownSubtotal);
+      priceNote.textContent = "Based on current listed rates; the store will confirm the final amount.";
+    }
     document.querySelector("#checkoutButton").disabled = cart.length === 0;
   }
 
@@ -82,6 +127,14 @@
     const name = card.querySelector("h3")?.textContent.trim();
     const options = card.querySelector(".product-options");
     if (!name || !options) return;
+
+    const priceNote = document.createElement("p");
+    priceNote.className = "product-price-note";
+    const rate = priceFor(name);
+    priceNote.textContent = rate === null
+      ? "Price to be confirmed"
+      : formatMoney(rate) + "/kg · " + formatMoney(rate * 50) + " per 50 kg sack";
+
     const controls = document.createElement("div");
     controls.className = "product-add-controls";
     controls.innerHTML = `
@@ -92,7 +145,8 @@
         <span class="quantity-wrap"><input class="quantity-input" type="number" min="1" step="1" value="1" aria-label="Quantity for ${moneySafe(name)}"><span class="quantity-unit">sack(s)</span></span>
       </label>
       <button type="button" class="add-cart-button">Add to cart <span>+</span></button>`;
-    options.after(controls);
+    options.after(priceNote, controls);
+
     const pack = controls.querySelector(".pack-choice");
     const qty = controls.querySelector(".quantity-input");
     const unit = controls.querySelector(".quantity-unit");
@@ -113,7 +167,7 @@
       const kind = loose ? "Loose" : "Sack";
       const existing = cart.find(item => item.name === name && item.kind === kind);
       if (existing) existing.quantity += quantity;
-      else cart.push({name, kind, quantity});
+      else cart.push({name, kind, quantity, pricePerKg: priceFor(name)});
       renderCart();
       document.querySelector(".shopping-cart-panel").scrollIntoView({behavior:"smooth", block:"nearest"});
     });
@@ -134,7 +188,17 @@
     event.preventDefault();
     if (!cart.length) return;
     const form = new FormData(event.currentTarget);
-    const lines = cart.map(item => "- " + item.name + ": " + (item.kind === "Sack" ? item.quantity + " x 50 kg sack" : String(item.quantity) + " kg loose"));
+    const knownSubtotal = cart.reduce((sum, item) => sum + (itemTotal(item) ?? 0), 0);
+    const hasUnpricedItems = cart.some(item => item.pricePerKg === null);
+    const lines = cart.map(item => {
+      const quantityText = item.kind === "Sack"
+        ? item.quantity + " x 50 kg sack(s)"
+        : String(item.quantity) + " kg loose";
+      const total = itemTotal(item);
+      return "- " + item.name + ": " + quantityText + (total === null
+        ? " — price to be confirmed"
+        : " — " + formatMoney(total) + " (" + formatMoney(item.pricePerKg) + "/kg)");
+    });
     const message = [
       "Hello Shreeyanvi Suppliers! I would like to place an order.",
       "",
@@ -147,7 +211,10 @@
       "ORDER ITEMS",
       ...lines,
       "",
-      "Please confirm availability and total price. Thank you!"
+      (hasUnpricedItems ? "Known-price subtotal: " : "Estimated total: ") + formatMoney(knownSubtotal),
+      ...(hasUnpricedItems ? ["Some product prices are pending confirmation; this is not the final order total."] : ["Estimate based on current listed rates; please confirm the final amount."]),
+      "",
+      "Please confirm availability and final total. Thank you!"
     ].join("\n");
     const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
     window.open(url, "_blank", "noopener,noreferrer");
