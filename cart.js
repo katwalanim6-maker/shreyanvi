@@ -43,22 +43,31 @@
         const title = document.createElement("strong");
         title.textContent = item.name;
         const subtitle = document.createElement("span");
-        subtitle.textContent = item.kind === "Sack" ? "50 kg sack" : item.quantity.toFixed(1) + " kg loose";
+        subtitle.textContent = item.kind === "Sack" ? "50 kg sack(s)" : "Loose feed · kg";
         details.append(title, subtitle);
         const controls = document.createElement("div");
         controls.className = "cart-controls";
-        const minus = document.createElement("button");
-        minus.type = "button"; minus.textContent = "−"; minus.setAttribute("aria-label", "Decrease quantity");
-        const amount = document.createElement("b");
-        amount.textContent = item.kind === "Sack" ? String(item.quantity) : item.quantity.toFixed(1) + " kg";
-        const plus = document.createElement("button");
-        plus.type = "button"; plus.textContent = "+"; plus.setAttribute("aria-label", "Increase quantity");
+        const amount = document.createElement("input");
+        amount.type = "number";
+        amount.min = "1";
+        amount.step = item.kind === "Sack" ? "1" : "any";
+        amount.value = String(item.quantity);
+        amount.className = "cart-quantity-input";
+        amount.setAttribute("aria-label", item.kind === "Sack" ? "Number of 50 kg sacks" : "Loose quantity in kilograms");
+        amount.addEventListener("change", () => {
+          const value = Number(amount.value);
+          if (!Number.isFinite(value) || value < 1 || (item.kind === "Sack" && !Number.isInteger(value))) {
+            alert(item.kind === "Loose" ? "Minimum loose order is 1 kg. Please enter a valid quantity." : "Enter a whole number of sacks (minimum 1).");
+            amount.value = String(item.quantity);
+            return;
+          }
+          item.quantity = value;
+          renderCart();
+        });
         const remove = document.createElement("button");
         remove.type = "button"; remove.className = "cart-remove"; remove.textContent = "Remove";
-        minus.addEventListener("click", () => changeQuantity(index, -1));
-        plus.addEventListener("click", () => changeQuantity(index, 1));
         remove.addEventListener("click", () => { cart.splice(index, 1); renderCart(); });
-        controls.append(minus, amount, plus, remove);
+        controls.append(amount, remove);
         row.append(details, controls);
         list.append(row);
       });
@@ -67,14 +76,6 @@
     document.querySelector("#cartCount").textContent = count + (count === 1 ? " item" : " items");
     document.querySelector("#cartSummary").textContent = cart.length + " product type" + (cart.length === 1 ? "" : "s") + " selected";
     document.querySelector("#checkoutButton").disabled = cart.length === 0;
-  }
-
-  function changeQuantity(index, delta) {
-    const item = cart[index];
-    if (item.kind === "Sack") item.quantity = Math.max(0, item.quantity + delta);
-    else item.quantity = Math.max(0, Math.round((item.quantity + delta * 0.5) * 10) / 10);
-    if (item.quantity === 0) cart.splice(index, 1);
-    renderCart();
   }
 
   cards.forEach((card) => {
@@ -97,16 +98,16 @@
     const unit = controls.querySelector(".quantity-unit");
     pack.addEventListener("change", () => {
       const loose = pack.value === "Loose";
-      qty.min = loose ? "0.5" : "1";
-      qty.step = loose ? "0.5" : "1";
-      qty.value = loose ? "0.5" : "1";
+      qty.min = "1";
+      qty.step = loose ? "any" : "1";
+      qty.value = "1";
       unit.textContent = loose ? "kg" : "sack(s)";
     });
     controls.querySelector(".add-cart-button").addEventListener("click", () => {
       const loose = pack.value === "Loose";
       const quantity = Number(qty.value);
-      if (!Number.isFinite(quantity) || quantity < (loose ? 0.5 : 1) || (loose && Math.round(quantity * 2) !== quantity * 2) || (!loose && !Number.isInteger(quantity))) {
-        alert(loose ? "Enter loose quantity in 0.5 kg steps (minimum 0.5 kg)." : "Enter a whole number of sacks.");
+      if (!Number.isFinite(quantity) || quantity < 1 || (!loose && !Number.isInteger(quantity))) {
+        alert(loose ? "Minimum loose order is 1 kg. Please type the quantity in kilograms." : "Enter a whole number of sacks (minimum 1).");
         return;
       }
       const kind = loose ? "Loose" : "Sack";
