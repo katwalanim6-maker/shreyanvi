@@ -49,7 +49,7 @@ Deno.serve(async (req: Request) => {
       authenticated: true,
       isAdmin: isAdmin === true,
       message: isAdmin === true
-        ? "Shreyanvi admin access verified."
+        ? "Shreeyanvi admin access verified."
         : "This account does not have store admin permission."
     });
   } catch (error) {
