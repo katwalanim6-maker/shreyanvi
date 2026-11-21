@@ -134,7 +134,7 @@
     event.preventDefault();
     if (!cart.length) return;
     const form = new FormData(event.currentTarget);
-    const lines = cart.map(item => "- " + item.name + ": " + (item.kind === "Sack" ? item.quantity + " x 50 kg sack" : item.quantity.toFixed(1) + " kg loose"));
+    const lines = cart.map(item => "- " + item.name + ": " + (item.kind === "Sack" ? item.quantity + " x 50 kg sack" : String(item.quantity) + " kg loose"));
     const message = [
       "Hello Shreeyanvi Suppliers! I would like to place an order.",
       "",
