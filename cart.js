@@ -25,7 +25,7 @@
         <select name="fulfilment" required><option value="Store pickup">Store pickup</option><option value="Home delivery">Home delivery</option></select>
       </label>
       <label id="addressField" hidden>Delivery address<textarea name="address" rows="2" maxlength="300" placeholder="Enter your delivery address"></textarea></label>
-      <p class="checkout-hint">Your order will be sent to Shreyanvi Suppliers on WhatsApp. The store will confirm availability and pricing with you.</p>
+      <p class="checkout-hint">Your order will be sent to Shreeyanvi Suppliers on WhatsApp. The store will confirm availability and pricing with you.</p>
       <button class="button button-light checkout-submit" type="submit">Send order on WhatsApp <span>↗</span></button>
     </form>`;
   document.body.append(checkout);
@@ -135,7 +135,7 @@
     const form = new FormData(event.currentTarget);
     const lines = cart.map(item => "- " + item.name + ": " + (item.kind === "Sack" ? item.quantity + " x 50 kg sack" : item.quantity.toFixed(1) + " kg loose"));
     const message = [
-      "Hello Shreyanvi Suppliers! I would like to place an order.",
+      "Hello Shreeyanvi Suppliers! I would like to place an order.",
       "",
       "CUSTOMER DETAILS",
       "Name: " + form.get("customerName").trim(),
