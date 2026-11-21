@@ -190,7 +190,7 @@ $("#create-order-form").addEventListener("submit", async event => {
     const waNumber = phoneDigits.startsWith("977") ? phoneDigits :
       phoneDigits.startsWith("0") ? "977" + phoneDigits.slice(1) :
       phoneDigits.length === 10 ? "977" + phoneDigits : phoneDigits;
-    const waText = "Hello " + payload.customer_name + ", your Shreyanvi Suppliers order " +
+    const waText = "Hello " + payload.customer_name + ", your Shreeyanvi Suppliers order " +
       data.order_number + " has been created. Track its progress here: " + link;
     const whatsappUrl = "https://wa.me/" + waNumber + "?text=" + encodeURIComponent(waText);
     result.innerHTML = '<strong>Order ' + escapeHtml(data.order_number) + ' created.</strong><br>' +
