@@ -186,9 +186,17 @@ $("#create-order-form").addEventListener("submit", async event => {
     const data = await callAdmin("create-order", payload);
     const link = data.tracking_url;
     const result = $("#created-result");
+    const phoneDigits = payload.customer_phone.replace(/\\D/g, "");
+    const waNumber = phoneDigits.startsWith("977") ? phoneDigits :
+      phoneDigits.startsWith("0") ? "977" + phoneDigits.slice(1) :
+      phoneDigits.length === 10 ? "977" + phoneDigits : phoneDigits;
+    const waText = "Hello " + payload.customer_name + ", your Shreyanvi Suppliers order " +
+      data.order_number + " has been created. Track its progress here: " + link;
+    const whatsappUrl = "https://wa.me/" + waNumber + "?text=" + encodeURIComponent(waText);
     result.innerHTML = '<strong>Order ' + escapeHtml(data.order_number) + ' created.</strong><br>' +
-      'Send this private tracking link to the customer:<br><a href="' + escapeHtml(link) + '" target="_blank" rel="noopener">' + escapeHtml(link) + '</a><br>' +
-      '<button type="button" class="btn btn-small" id="copy-tracking" style="margin-top:10px">Copy tracking link</button>';
+      'Private tracking link:<br><a href="' + escapeHtml(link) + '" target="_blank" rel="noopener">' + escapeHtml(link) + '</a><br>' +
+      '<button type="button" class="btn btn-small" id="copy-tracking" style="margin:10px 6px 0 0">Copy tracking link</button>' +
+      '<a class="btn btn-small" style="display:inline-block;margin-top:10px;text-decoration:none" href="' + escapeHtml(whatsappUrl) + '" target="_blank" rel="noopener">Open WhatsApp message</a>';
     result.style.display = "block";
     $("#copy-tracking").addEventListener("click", async () => {
       try { await navigator.clipboard.writeText(link); $("#copy-tracking").textContent = "Copied"; }
