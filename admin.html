@@ -10,40 +10,85 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{color-scheme:dark;--bg:#090909;--panel:#111;--line:#292929;--muted:#999;--white:#f4f4f1;--accent:#d7f36a}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#1c2114 0,transparent 48%),var(--bg);color:var(--white);font:14px/1.6 "DM Sans",sans-serif;display:grid;place-items:center;padding:24px}
-    .shell{width:min(100%,430px)}.brand{display:flex;align-items:center;gap:11px;margin-bottom:35px}.mark{width:38px;height:38px;border:1px solid #555;border-radius:50%;display:grid;place-items:center;font:800 20px Manrope,sans-serif}.mark span{color:var(--accent)}.brand-name{font:800 12px Manrope,sans-serif;letter-spacing:.13em}.brand-name small{display:block;color:#888;font:8px "DM Sans",sans-serif;letter-spacing:.28em}
-    .panel{background:rgba(17,17,17,.96);border:1px solid var(--line);padding:30px;box-shadow:0 24px 80px #0008}.eyebrow{font-size:9px;font-weight:700;letter-spacing:.2em;color:#a4a4a4}.eyebrow:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin:0 9px 1px 0}h1{font:600 34px/1.12 Manrope,sans-serif;letter-spacing:-.06em;margin:15px 0 8px}h1 em{font-style:normal;color:var(--accent)}.intro{margin:0 0 25px;color:#999;font-size:12px}
-    label{display:block;color:#c8c8c8;font-size:11px;margin:17px 0 7px}input{width:100%;height:47px;padding:0 13px;background:#090909;border:1px solid #363636;border-radius:3px;color:var(--white);font:13px "DM Sans",sans-serif;outline:none}input:focus{border-color:var(--accent)}button{width:100%;height:48px;margin-top:22px;border:0;border-radius:3px;background:var(--accent);color:#101010;font:700 12px "DM Sans",sans-serif;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.message{min-height:22px;margin:15px 0 0;color:#b8b8b8;font-size:11px}.message.error{color:#ff9b91}.message.success{color:var(--accent)}.secure{margin:18px 0 0;padding-top:15px;border-top:1px solid #292929;color:#777;font-size:10px}.back{display:inline-block;margin-top:20px;color:#aaa;font-size:11px;text-decoration:none}.back:hover{color:var(--accent)}.dashboard{display:none}.dashboard h2{font:600 22px Manrope,sans-serif;margin:0 0 8px}.dashboard p{color:#999;font-size:12px}.status{padding:14px;border:1px solid #3a4529;background:#15190f;color:#d7e7ad;font-size:12px;margin:18px 0}.logout{background:transparent;border:1px solid #454545;color:#eee;margin-top:10px}
-    @media(max-width:480px){.panel{padding:23px}.shell{max-width:390px}}
+    :root{color-scheme:dark;--bg:#090909;--panel:#111;--line:#292929;--muted:#929292;--white:#f4f4f1;--accent:#d7f36a;--red:#ff9b91}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#1c2114 0,transparent 42%),var(--bg);color:var(--white);font:14px/1.55 "DM Sans",sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{width:min(1180px,100%);margin:auto;padding:26px 22px 60px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:11px}.mark{width:38px;height:38px;border:1px solid #555;border-radius:50%;display:grid;place-items:center;font:800 20px Manrope}.mark span{color:var(--accent)}.brand-name{font:800 12px Manrope;letter-spacing:.13em}.brand-name small{display:block;color:#888;font:8px "DM Sans";letter-spacing:.28em}
+    .top-actions{display:flex;gap:10px;align-items:center}.text-link{color:#aaa;text-decoration:none;font-size:11px}.text-link:hover{color:var(--accent)}.btn{border:0;border-radius:3px;background:var(--accent);color:#101010;padding:12px 16px;font-weight:700;font-size:11px}.btn:disabled{opacity:.5;cursor:wait}.btn-quiet{background:#171717;color:#eee;border:1px solid #3b3b3b}.btn-small{padding:8px 11px}
+    .panel{background:rgba(17,17,17,.96);border:1px solid var(--line);padding:22px;box-shadow:0 20px 65px #0005}.login{width:min(430px,100%);margin:9vh auto}.eyebrow{font-size:9px;font-weight:700;letter-spacing:.2em;color:#a4a4a4}.eyebrow:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin:0 9px 1px 0}
+    h1{font:600 34px/1.12 Manrope;letter-spacing:-.06em;margin:15px 0 8px}h1 em{font-style:normal;color:var(--accent)}h2{font:700 17px Manrope;margin:0 0 5px}.intro,.muted{color:var(--muted);font-size:12px}.intro{margin:0 0 22px}
+    label{display:block;color:#c8c8c8;font-size:11px;margin:14px 0 6px}input,select,textarea{width:100%;min-height:43px;padding:10px 12px;background:#090909;border:1px solid #363636;border-radius:3px;color:var(--white);outline:none}textarea{min-height:72px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:var(--accent)}.message{min-height:20px;margin:12px 0 0;color:#b8b8b8;font-size:11px}.message.error{color:var(--red)}.message.success{color:var(--accent)}.secure{margin:18px 0 0;padding-top:15px;border-top:1px solid #292929;color:#777;font-size:10px}
+    #dashboard{display:none}.welcome{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 22px}.welcome h1{margin:8px 0 4px}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{padding:17px;background:#111;border:1px solid var(--line)}.stat span{display:block;color:#999;font-size:10px}.stat strong{display:block;font:700 27px Manrope;margin-top:7px}.stat small{color:#888;font-size:9px}
+    .main-grid{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(0,1.5fr);gap:16px;align-items:start}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.section-head p{margin:3px 0 0}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.item-list{display:grid;gap:9px;margin:10px 0}.item-row{display:grid;grid-template-columns:1.3fr .8fr .7fr auto;gap:7px;align-items:end;padding:10px;background:#0b0b0b;border:1px solid #292929}.item-row label{margin:0 0 5px;font-size:9px}.item-row select,.item-row input{min-height:39px;padding:8px;font-size:11px}.remove-item{height:39px;width:34px;background:transparent;color:#aaa;border:1px solid #393939;border-radius:3px}.form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.order-tools{display:flex;gap:8px;margin-bottom:12px}.order-tools input{flex:1}.orders{display:grid;gap:10px}.order{padding:15px;background:#0c0c0c;border:1px solid #2b2b2b}.order-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.order-number{font:700 13px Manrope;color:var(--accent)}.order-date{font-size:10px;color:#888}.order-customer{font-weight:700;margin-top:7px}.order-meta{font-size:11px;color:#aaa;margin-top:3px;overflow-wrap:anywhere}.order-items{font-size:11px;color:#c8c8c8;margin:9px 0;padding:8px 0;border-top:1px solid #242424;border-bottom:1px solid #242424}.order-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}.order-controls label{font-size:9px;margin:0 0 4px}.order-controls select{min-height:38px;padding:7px;font-size:10px}.empty{padding:30px 12px;text-align:center;color:#888;border:1px dashed #393939;font-size:12px}.result{display:none;margin-top:14px;padding:13px;border:1px solid #46502e;background:#15190f;color:#d7e7ad;font-size:11px;overflow-wrap:anywhere}.result a{color:var(--accent)}.hidden{display:none!important}
+    @media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}.main-grid{grid-template-columns:1fr}.wrap{max-width:720px}}
+    @media(max-width:560px){.wrap{padding:18px 13px 40px}.top{align-items:flex-start}.top-actions{flex-direction:column;align-items:flex-end}.stats{grid-template-columns:repeat(2,1fr);gap:8px}.stat{padding:13px}.stat strong{font-size:23px}.panel{padding:16px}.field-grid{grid-template-columns:1fr}.item-row{grid-template-columns:1fr 1fr}.remove-item{width:100%}.order-controls{grid-template-columns:1fr 1fr}.order-controls .btn{grid-column:1/-1}.welcome{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
-  <main class="shell">
-    <div class="brand"><div class="mark">S<span>.</span></div><div class="brand-name">SHREYANVI <small>SUPPLIERS · STORE ADMIN</small></div></div>
-    <section class="panel" id="login-panel">
-      <div class="eyebrow">PRIVATE STORE ACCESS</div>
-      <h1>Welcome <em>back.</em></h1>
+  <main class="wrap">
+    <header class="top">
+      <div class="brand"><div class="mark">S<span>.</span></div><div class="brand-name">SHREYANVI <small>SUPPLIERS · STORE ADMIN</small></div></div>
+      <div class="top-actions"><a class="text-link" href="index.html">← View website</a><button id="logout-button" class="btn btn-quiet btn-small hidden" type="button">Sign out</button></div>
+    </header>
+
+    <section class="panel login" id="login-panel">
+      <div class="eyebrow">PRIVATE STORE ACCESS</div><h1>Welcome <em>back.</em></h1>
       <p class="intro">Sign in with your authorised store administrator account.</p>
       <form id="login-form">
-        <label for="email">Email address</label>
-        <input id="email" type="email" autocomplete="username" required>
-        <label for="password">Password</label>
-        <input id="password" type="password" autocomplete="current-password" required>
-        <button id="login-button" type="submit">Sign in to store admin</button>
+        <label for="email">Email address</label><input id="email" type="email" autocomplete="username" required>
+        <label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required>
+        <button id="login-button" class="btn" style="width:100%;margin-top:20px" type="submit">Sign in to store admin</button>
       </form>
-      <p class="message" id="message" role="status" aria-live="polite"></p>
-      <p class="secure">🔒 Your sign-in is checked by Supabase. Only an account explicitly authorised by the store can enter.</p>
+      <p class="message" id="login-message" role="status" aria-live="polite"></p>
+      <p class="secure">🔒 Only an account authorised by the store can access orders and customer information.</p>
     </section>
-    <section class="panel dashboard" id="dashboard-panel">
-      <div class="eyebrow">ACCESS VERIFIED</div>
-      <h1>Admin <em>verified.</em></h1>
-      <h2 id="admin-email"></h2>
-      <div class="status" id="admin-status">Your account has store administrator access.</div>
-      <p>The secure login is working. Order-management tools will appear here in the next step.</p>
-      <button class="logout" id="logout-button" type="button">Sign out</button>
+
+    <section id="dashboard">
+      <div class="welcome"><div><div class="eyebrow">STORE CONTROL CENTRE</div><h1>Orders <em>overview.</em></h1><p class="muted" id="admin-email"></p></div><button class="btn btn-quiet" id="refresh-button" type="button">↻ Refresh orders</button></div>
+      <div class="stats">
+        <div class="stat"><span>Total orders</span><strong id="stat-total">—</strong><small>All recorded orders</small></div>
+        <div class="stat"><span>Awaiting confirmation</span><strong id="stat-received">—</strong><small>New requests</small></div>
+        <div class="stat"><span>Confirmed</span><strong id="stat-confirmed">—</strong><small>Accepted orders</small></div>
+        <div class="stat"><span>In preparation</span><strong id="stat-preparing">—</strong><small>Being prepared</small></div>
+        <div class="stat"><span>Completed</span><strong id="stat-completed">—</strong><small>Finished orders</small></div>
+      </div>
+
+      <div class="main-grid">
+        <section class="panel">
+          <div class="section-head"><div><h2>Create an order</h2><p class="muted">Use after confirming the request with the customer.</p></div></div>
+          <form id="create-order-form">
+            <div class="field-grid">
+              <div><label for="customer-name">Customer name</label><input id="customer-name" required maxlength="100"></div>
+              <div><label for="customer-phone">Phone number</label><input id="customer-phone" required maxlength="30" inputmode="tel"></div>
+              <div><label for="fulfillment">Fulfilment</label><select id="fulfillment"><option value="pickup">Store pickup</option><option value="delivery">Home delivery</option></select></div>
+              <div><label for="payment-method">Payment method</label><select id="payment-method"><option value="cash">Cash</option><option value="qr">QR payment</option></select></div>
+            </div>
+            <div id="address-wrap" class="hidden"><label for="delivery-address">Delivery address</label><textarea id="delivery-address" maxlength="500"></textarea></div>
+            <label>Order items</label>
+            <div id="item-list" class="item-list">
+              <div class="item-row">
+                <div><label>Product</label><select class="product-code"><option value="b0">Broiler B0</option><option value="b1">Broiler B1</option><option value="b2">Broiler B2</option><option value="b3">Broiler B3</option><option value="g1">Giriraj G1</option><option value="g2">Giriraj G2</option><option value="g3">Giriraj G3</option><option value="cattle_feed">Cattle feed</option><option value="chockar">Chockar</option></select></div>
+                <div><label>Pack type</label><select class="item-unit"><option value="50kg_sack">50 kg sack</option><option value="kg">Loose (kg)</option></select></div>
+                <div><label>Quantity</label><input class="item-quantity" type="number" min="0.5" step="0.5" value="1" required></div>
+                <button class="remove-item" type="button" aria-label="Remove item" disabled>×</button>
+              </div>
+            </div>
+            <button id="add-item" class="btn btn-quiet btn-small" type="button">+ Add another product</button>
+            <label for="customer-note">Customer note (optional)</label><textarea id="customer-note" maxlength="1000" placeholder="Any useful order details..."></textarea>
+            <div class="form-actions"><button id="create-button" class="btn" type="submit">Create order & generate tracking link</button></div>
+            <p id="create-message" class="message" role="status" aria-live="polite"></p>
+            <div id="created-result" class="result"></div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="section-head"><div><h2>Order register</h2><p class="muted">Manage status and payment after confirming with the customer.</p></div></div>
+          <div class="order-tools"><input id="order-search" type="search" placeholder="Search order, customer or phone..."></div>
+          <div id="orders-list" class="orders"><div class="empty">Loading orders…</div></div>
+          <p id="orders-message" class="message" role="status" aria-live="polite"></p>
+        </section>
+      </div>
     </section>
-    <a class="back" href="index.html">← Back to Shreyanvi Suppliers</a>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="admin.js" defer></script>
