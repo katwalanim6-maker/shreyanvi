@@ -40,8 +40,11 @@
       </label>
       <label id="addressField" hidden>Delivery address<textarea name="address" rows="2" maxlength="300" placeholder="Enter your delivery address"></textarea></label>
       <p class="checkout-hint">Prices shown for B0–B3 are temporary estimates. Other feed prices and final availability will be confirmed by the store.</p>
-      <p class="checkout-hint checkout-send-instruction"><strong>Important:</strong> WhatsApp will open with your order message ready. Please press <strong>Send</strong> in WhatsApp to submit your order and confirm it with us.</p>
-      <button class="button button-light checkout-submit" type="submit">Open WhatsApp to confirm <span>↗</span></button>
+      <p class="checkout-hint checkout-send-instruction"><strong>Choose how to confirm:</strong> We will open your selected messaging app with the order details ready. Please press <strong>Send</strong> there to submit your order.</p>
+      <div class="checkout-contact-options">
+        <button class="button button-light checkout-submit" type="submit" name="contactMethod" value="whatsapp">Confirm with WhatsApp <span>↗</span></button>
+        <button class="button checkout-submit checkout-sms" type="submit" name="contactMethod" value="sms">Confirm with SMS <span>↗</span></button>
+      </div>
     </form>`;
   document.body.append(checkout);
 
@@ -217,8 +220,13 @@
       "",
       "Please confirm availability and final total. I am sending this message to confirm my order. Thank you!"
     ].join("\n");
-    const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
-    window.open(url, "_blank", "noopener,noreferrer");
+    const contactMethod = event.submitter?.value || "whatsapp";
+    if (contactMethod === "sms") {
+      window.location.href = "sms:+" + phone + "?body=" + encodeURIComponent(message);
+    } else {
+      const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
   });
 
   renderCart();
