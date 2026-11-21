@@ -149,7 +149,7 @@ Deno.serve(async (req: Request) => {
         await admin.from("orders").delete().eq("id", order.id);
         return json({ ok:false, message:"Order items could not be saved. No partial order was kept." }, 500);
       }
-      const tracking_url = "https://katwalanim6-maker.github.io/shreyanvi/track.html?token=" + token;
+      const tracking_url = "https://katwalanim6-maker.github.io/shreeyanvi/track.html?token=" + token;
       return json({ ok:true, order_number:order.order_number, tracking_url });
     }
 
