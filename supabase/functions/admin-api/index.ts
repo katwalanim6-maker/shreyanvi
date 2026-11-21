@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
       global: { headers: { Authorization: authorization } },
       auth: { persistSession:false, autoRefreshToken:false }
     });
-    const { data: userData, error: userError } = await userClient.auth.getUser();
+    const accessToken = authorization.slice("Bearer ".length);\n    const { data: userData, error: userError } = await userClient.auth.getUser(accessToken);
     if (userError || !userData.user) return json({ ok:false, message:"Your session is invalid. Please sign in again." }, 401);
 
     const { data: isAdmin, error: adminError } = await userClient.rpc("is_store_admin");
