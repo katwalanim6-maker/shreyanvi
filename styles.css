@@ -290,3 +290,8 @@ h1 em,h2 em{font-style:normal;color:var(--accent)}
 .cart-totals #cartPriceNote{max-width:430px;color:#929292;font-size:9px;line-height:1.6}
 .cart-line-total{color:var(--accent)!important;font-size:10px!important}
 @media(max-width:640px){.cart-totals #cartTotal{font-size:17px}}
+
+.checkout-contact-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checkout-contact-options .checkout-submit{width:100%;min-height:48px;font-size:10px}
+.checkout-contact-options .checkout-sms{background:#252525;color:#f4f4f4;border:1px solid #555;cursor:pointer;justify-content:space-between}
+@media(max-width:420px){.checkout-contact-options{grid-template-columns:1fr}}
