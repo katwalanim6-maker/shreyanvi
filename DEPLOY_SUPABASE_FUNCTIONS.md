@@ -1,4 +1,4 @@
-# Deploy the Shreyanvi order-management functions
+# Deploy the Shreeyanvi order-management functions
 
 The website files are hosted on GitHub Pages. The TypeScript files in this folder must be deployed as Supabase Edge Functions; GitHub Pages does not deploy them.
 
@@ -33,4 +33,4 @@ The admin and tracking functions use elevated access only inside Edge Functions.
 5. Change the order status in admin and refresh the tracking page.
 6. Confirm the timeline updates, then cancel or remove the test order if appropriate.
 
-The functions expect the existing Shreyanvi tables: `orders`, `order_items`, and `order_status_history`. Inspect the actual schema before changing columns if a function reports a missing table or field.
+The functions expect the existing Shreeyanvi tables: `orders`, `order_items`, and `order_status_history`. Inspect the actual schema before changing columns if a function reports a missing table or field.
