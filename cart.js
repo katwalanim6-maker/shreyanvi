@@ -23,7 +23,7 @@
         <strong id="cartTotal">Estimated total: Rs. 0</strong>
         <small id="cartPriceNote">Add products to see your total.</small>
       </div>
-      <button class="button button-light" id="checkoutButton" type="button" disabled>Continue to WhatsApp <span>↗</span></button>
+      <button class="button button-light" id="checkoutButton" type="button" disabled>Confirm order <span>↗</span></button>
     </div>
   `;
   document.querySelector(".product-catalogue").append(panel);
@@ -40,7 +40,8 @@
       </label>
       <label id="addressField" hidden>Delivery address<textarea name="address" rows="2" maxlength="300" placeholder="Enter your delivery address"></textarea></label>
       <p class="checkout-hint">Prices shown for B0–B3 are temporary estimates. Other feed prices and final availability will be confirmed by the store.</p>
-      <button class="button button-light checkout-submit" type="submit">Send order on WhatsApp <span>↗</span></button>
+      <p class="checkout-hint checkout-send-instruction"><strong>Important:</strong> WhatsApp will open with your order message ready. Please press <strong>Send</strong> in WhatsApp to submit your order and confirm it with us.</p>
+      <button class="button button-light checkout-submit" type="submit">Open WhatsApp to confirm <span>↗</span></button>
     </form>`;
   document.body.append(checkout);
 
@@ -214,7 +215,7 @@
       (hasUnpricedItems ? "Known-price subtotal: " : "Estimated total: ") + formatMoney(knownSubtotal),
       ...(hasUnpricedItems ? ["Some product prices are pending confirmation; this is not the final order total."] : ["Estimate based on current listed rates; please confirm the final amount."]),
       "",
-      "Please confirm availability and final total. Thank you!"
+      "Please confirm availability and final total. I am sending this message to confirm my order. Thank you!"
     ].join("\n");
     const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
     window.open(url, "_blank", "noopener,noreferrer");
