@@ -295,3 +295,9 @@ h1 em,h2 em{font-style:normal;color:var(--accent)}
 .checkout-contact-options .checkout-submit{width:100%;min-height:48px;font-size:10px}
 .checkout-contact-options .checkout-sms{background:#252525;color:#f4f4f4;border:1px solid #555;cursor:pointer;justify-content:space-between}
 @media(max-width:420px){.checkout-contact-options{grid-template-columns:1fr}}
+
+
+/* Real broiler feed packaging images on the product catalogue */
+.product-package-art{background:#f5f3ed;}
+.product-package-art:before,.product-package-art:after{display:none;}
+.product-package-art img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;padding:5px;}
