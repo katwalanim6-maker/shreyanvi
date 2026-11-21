@@ -280,3 +280,13 @@ h1 em,h2 em{font-style:normal;color:var(--accent)}
  .cart-controls .cart-remove{margin-left:auto}
  .checkout-form{padding:19px}
 }
+
+
+/* Live product prices and cart totals */
+.product-price-note{margin:10px 0 0;color:var(--accent);font-size:9px;line-height:1.5}
+.cart-totals{display:grid;gap:5px}
+.cart-totals #cartSummary{font-size:9px;color:#929292;font-weight:500}
+.cart-totals #cartTotal{font-family:var(--display);font-size:18px;color:var(--accent)}
+.cart-totals #cartPriceNote{max-width:430px;color:#929292;font-size:9px;line-height:1.6}
+.cart-line-total{color:var(--accent)!important;font-size:10px!important}
+@media(max-width:640px){.cart-totals #cartTotal{font-size:17px}}
