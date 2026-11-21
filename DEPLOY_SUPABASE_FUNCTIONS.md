@@ -1,32 +1,36 @@
 # Deploy the Shreyanvi order-management functions
 
-The website files are hosted on GitHub Pages. The two TypeScript files in this folder are **not automatically deployed** by GitHub Pages; they must be deployed as Supabase Edge Functions.
+The website files are hosted on GitHub Pages. The TypeScript files in this folder must be deployed as Supabase Edge Functions; GitHub Pages does not deploy them.
 
-## 1. Deploy admin-api
+## 1. Deploy admin-check
 1. Open https://supabase.com/dashboard/project/hlkuewtgwjgywxstzbex/functions
 2. Choose **Deploy new function** → **Via Editor**.
-3. Name it exactly: `admin-api`.
-4. Open `supabase/functions/admin-api/index.ts` in this repository and copy the complete file into the editor.
-5. Keep **Verify JWT** enabled, then deploy.
+3. Name it exactly: `admin-check`.
+4. Copy the complete file from `supabase/functions/admin-check/index.ts`.
+5. Keep **Verify JWT ON**, then deploy.
 
-## 2. Deploy public-track
-Repeat the same steps with function name `public-track`, using `supabase/functions/public-track/index.ts`.
-For this public tracking function, turn **Verify JWT OFF**. The tracking token is a random 256-bit secret and the function returns only order progress and item details, not customer contact information.
+## 2. Deploy admin-api
+Repeat the steps above with function name `admin-api`, using `supabase/functions/admin-api/index.ts`.
+Keep **Verify JWT ON**.
 
-## 3. Function secrets
-The functions use Supabase's default environment variables:
+## 3. Deploy public-track
+Repeat with function name `public-track`, using `supabase/functions/public-track/index.ts`.
+Set **Verify JWT OFF**. This endpoint validates a random 256-bit tracking token itself and returns order progress and item details only.
+
+## 4. Function environment
+The functions use Supabase's injected environment values:
 - `SUPABASE_URL`
 - `SUPABASE_PUBLISHABLE_KEYS`
 - `SUPABASE_SECRET_KEYS`
 
-Supabase normally provides these automatically to hosted Edge Functions. The code also supports the legacy `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` variables. Never put a secret/service-role key in this GitHub repository or in browser JavaScript.
+The admin and tracking functions use elevated access only inside Edge Functions. Never copy a secret/service-role key into this repository or browser JavaScript. The browser publishable key is intentionally public and must be protected by RLS, table grants, and server-side authorization.
 
-## 4. Test
+## 5. Test
 1. Open the website admin page and sign in.
-2. The dashboard should load the order register and counts.
-3. Create a test order with a test phone number you control.
-4. Open the generated tracking link in a private/incognito tab.
-5. Update the test order status in admin and refresh the tracking page.
-6. Delete or cancel the test order after testing if appropriate.
+2. Confirm the dashboard loads the order register and counts.
+3. Create a test order using a test phone number you control.
+4. Open its tracking link in a private/incognito tab.
+5. Change the order status in admin and refresh the tracking page.
+6. Confirm the timeline updates, then cancel or remove the test order if appropriate.
 
-The existing tables and columns are expected to match the Shreyanvi schema already created in Supabase: `orders`, `order_items`, and `order_status_history`. If a function reports a missing column/table, stop and inspect the actual schema rather than adding guessed columns.
+The functions expect the existing Shreyanvi tables: `orders`, `order_items`, and `order_status_history`. Inspect the actual schema before changing columns if a function reports a missing table or field.
